@@ -1,7 +1,14 @@
 import { drizzle } from "drizzle-orm/neon-http";
 import { neon } from "@neondatabase/serverless";
 
-import * as schema from "./schema"
+import * as schema from "./schema";
+import * as dotenv from "dotenv";
+
+if (!process.env.DATABASE_URL) {
+    throw new Error("Missing DATABASE_URL in enviroment")
+}
+
+
 
 const sql = neon(process.env.DATABASE_URL!)
 

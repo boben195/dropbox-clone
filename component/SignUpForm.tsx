@@ -13,6 +13,7 @@ import { useState } from "react"
 export default function SignUpForm() {
     const [verifying, setVerifying] = useState(false)
     const [isSubmiting, setIsSubmiting] = useState(false)
+    const [verificationCode, setVerificationCode] = useState("")
     const [authError, setAuthError] = useState<string | null>(null)
     const { signUp, isLoaded, setActive } = useSignUp()
 
@@ -40,7 +41,7 @@ export default function SignUpForm() {
                 emailAddress: data.email,
                 password: data.password
             })
-            await signUp.prepareEmailAddressVerfication({
+            await signUp.prepareEmailAddressVerification({
                 strategy: "email_code"
             })
             setVerifying(true)
@@ -55,7 +56,18 @@ export default function SignUpForm() {
 
      }
 
-    const handleVerificationSubmit = async () => { }
+    const handleVerificationSubmit = async (e: React.FormEvent<HTMLFormElement>) => { 
+        e.preventDefault()
+        if (!isLoaded || !signUp) return
+        setIsSubmiting(true)
+        setAuthError(null)
+
+        try {
+            await signUp.attemptEmailAddressVerification({})
+        } catch (error) {
+            
+        }
+    }
 
     if (verifying) {
         return (

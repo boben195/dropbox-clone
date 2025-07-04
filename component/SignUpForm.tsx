@@ -7,14 +7,17 @@ import { z } from "zod"
 import { signUpSchema } from "@/schemas/signUpSchema"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 
 
 
 export default function SignUpForm() {
+    const router = useRouter()
     const [verifying, setVerifying] = useState(false)
     const [isSubmiting, setIsSubmiting] = useState(false)
     const [verificationCode, setVerificationCode] = useState("")
     const [authError, setAuthError] = useState<string | null>(null)
+    const [verificationError, setVerificationError] = useState<string | null>(null)
     const { signUp, isLoaded, setActive } = useSignUp()
 
     const {
@@ -63,9 +66,24 @@ export default function SignUpForm() {
         setAuthError(null)
 
         try {
-            await signUp.attemptEmailAddressVerification({})
-        } catch (error) {
-            
+            const result = await signUp.attemptEmailAddressVerification({
+                code: verificationCode
+            })
+            if (result.status === "complete") {
+                await setActive({ session: result.createdSessionId })
+                router.push("/dashbord")
+            } else {
+                console.error("verification incomplite", result)
+                setVerificationError(
+                    "verification could not be complite"
+                )
+            }
+        } catch (error: any) {
+            console.error("verification incomplite", error)
+            setVerificationError(error.errors?.[0]?.message || "an error occured during signup")
+        }
+        finally {
+            setIsSubmiting(false)
         }
     }
 

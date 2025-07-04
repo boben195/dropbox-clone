@@ -1,13 +1,14 @@
 "use client"
 
-import { useForm } from "react-hook-form"
-import { useSignUp } from "@clerk/nextjs"
-import { z } from "zod"
+import { useForm } from "react-hook-form";
+import { useSignUp } from "@clerk/nextjs";
+import { z } from "zod";
 
-import { signUpSchema } from "@/schemas/signUpSchema"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useState } from "react"
-import { useRouter } from "next/navigation"
+import { signUpSchema } from "@/schemas/signUpSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import {Card, CardBody} from "@heroui/react";
 
 
 
